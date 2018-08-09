@@ -1,5 +1,6 @@
 
 let numberOfMatches = 0;
+let cardsToMatch = [];
 
 let deck = document.querySelector('.deck');
 /*
@@ -20,7 +21,7 @@ for (card of shuffledCards) {
     deck.appendChild(card);
 }
 
-let openCards = [];
+
 deck.addEventListener('click', function (event) {
     //Get clicked card
     let target = event.target;
@@ -28,31 +29,31 @@ deck.addEventListener('click', function (event) {
     //Check if user clicked a card
     if (target.classList.contains('card')) {
         //Open the card
-        target.classList.add('open', 'show');
+        displayCard(target);
 
         //Avoid multiple clicks on same card
         if(!target.classList.contains('avoid-clicks')) {
             //Add only two cards
-            if(openCards.length !== 2) {
-                openCards.push(target);                
-                target.classList.add('avoid-clicks');
-                //console.log(openCards);
+            if(cardsToMatch.length !== 2) {
+                addTocardsToMatch();
+                //console.log(cardsToMatch);
             } 
         }
 
-        if(openCards.length === 2){
-            if(openCards[0].firstElementChild.className === openCards[1].firstElementChild.className) {
-                openCards[0].classList.add('match');
-                openCards[1].classList.add('match');
-                openCards = [];
+        if(cardsToMatch.length === 2){
+            if(cardsToMatch[0].firstElementChild.className === cardsToMatch[1].firstElementChild.className) {
+                keepCardsOpen();
+                
+                cardsToMatch = [];
                 numberOfMatches++;
 
-                if(numberOfMatches === 8) alert('Finished');
+                if(numberOfMatches === 8) 
+                    alert('Finished');
                 
             } else {
-                openCards[0].classList.remove('open', 'show', 'avoid-clicks');
-                openCards[1].classList.remove('open', 'show', 'avoid-clicks');
-                openCards = [];
+                cardsToMatch[0].classList.remove('open', 'show', 'avoid-clicks');
+                cardsToMatch[1].classList.remove('open', 'show', 'avoid-clicks');
+                cardsToMatch = [];
             }
         }
 
@@ -85,4 +86,20 @@ function shuffle(array) {
     }
 
     return array;
+}
+
+
+function displayCard(trgt){
+    trgt.classList.add('open', 'show');
+}
+
+function addTocardsToMatch(trgt){
+    cardsToMatch.push(trgt);      
+    console.log(trgt);      
+    trgt.classList.add('avoid-clicks');
+}
+
+function keepCardsOpen() {
+    cardsToMatch[0].classList.add('match');
+    cardsToMatch[1].classList.add('match');
 }
