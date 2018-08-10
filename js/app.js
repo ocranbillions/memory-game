@@ -1,64 +1,68 @@
 
-let numberOfMatches = 0;
-let cardsToMatch = [];
-
-let deck = document.querySelector('.deck');
-/*
- * Create a list that holds all of your cards
- */
-let cards = document.querySelectorAll('.card');
+let matchedPairs, movesCounter, shuffledCards, pairOfCards;
 
 
-/*
- * Display the cards on the page
- *   - shuffle the list of cards using the provided "shuffle" method below
- *   - loop through each card and create its HTML
- *   - add each card's HTML to the page
- */
-let shuffledCards = shuffle(Array.from(cards));
+const deck = document.querySelector('.deck');
+const cards = document.querySelectorAll('.card');
+const movesPanel = document.querySelector('.moves');
+const restartButton = document.querySelector('.restart');
 
-for (card of shuffledCards) {
-    deck.appendChild(card);
-}
+
+resetGame();
 
 
 deck.addEventListener('click', function (event) {
-    //Get clicked card
-    let target = event.target;
+    //Get clicked item
+    const target = event.target;
 
     //Check if user clicked a card
-    if (target.classList.contains('card')) {
+    if (cardIsClicked(target)) {
         //Open the card
-        displayCard(target);
+        openCard(target);
 
-        //Avoid multiple clicks on same card
-        if(!target.classList.contains('avoid-clicks')) {
-            //Add only two cards
-            if(cardsToMatch.length !== 2) {
-                addTocardsToMatch();
-                //console.log(cardsToMatch);
-            } 
+        //Avoid multiple clicks on same card & Add two cards at a time
+        if(firstClick(target) && pairOfCards.length < 2) {            
+            addCard(target);
         }
 
-        if(cardsToMatch.length === 2){
-            if(cardsToMatch[0].firstElementChild.className === cardsToMatch[1].firstElementChild.className) {
+        if(pairOfCards.length === 2){
+
+            if(match(pairOfCards)) {
                 keepCardsOpen();
                 
-                cardsToMatch = [];
-                numberOfMatches++;
+                //Empty pairOfCards Array
+                pairOfCards = [];
 
-                if(numberOfMatches === 8) 
+                //Count number of matched pairs
+                matchedPairs++;
+
+                if(matchedPairs === 8) {
                     alert('Finished');
+                    alert(`${movesCounter} moves`);
+                }
                 
             } else {
-                cardsToMatch[0].classList.remove('open', 'show', 'avoid-clicks');
-                cardsToMatch[1].classList.remove('open', 'show', 'avoid-clicks');
-                cardsToMatch = [];
-            }
-        }
 
+                closeCards();
+
+                //Empty pairOfCards Array
+                pairOfCards = [];
+            }
+
+            incrementMovesCounter(); 
+        }
     }    
 });
+
+
+
+
+//Restart button
+restartButton.addEventListener('click', function() {
+    resetGame();
+});
+
+
 
 
 /*
@@ -88,18 +92,62 @@ function shuffle(array) {
     return array;
 }
 
+function resetGame(){
+    /*
+ * Display the cards on the page
+ *   - shuffle the list of cards using the provided "shuffle" method below
+ *   - loop through each card and create its HTML
+ *   - 
+ */
 
-function displayCard(trgt){
+    matchedPairs = 0;
+    movesCounter = 0;
+    pairOfCards = [];
+    movesPanel.textContent = 0;
+
+    shuffledCards = shuffle(Array.from(cards));
+
+    for (card of shuffledCards) {
+        card.classList.remove('open', 'show', 'avoid-clicks', 'match');
+        //Add each card's HTML to the page
+        deck.appendChild(card);
+    }
+}
+
+
+
+function cardIsClicked(tgrt){
+    return tgrt.classList.contains('card');
+}
+function openCard(trgt){
     trgt.classList.add('open', 'show');
 }
 
-function addTocardsToMatch(trgt){
-    cardsToMatch.push(trgt);      
-    console.log(trgt);      
+function firstClick(tgrt){
+    //
+    return !tgrt.classList.contains('avoid-clicks');
+}
+
+function addCard(trgt){
+    pairOfCards.push(trgt);      
     trgt.classList.add('avoid-clicks');
 }
 
+function match(cards) {
+    return cards[0].firstElementChild.className === cards[1].firstElementChild.className;
+}
+
 function keepCardsOpen() {
-    cardsToMatch[0].classList.add('match');
-    cardsToMatch[1].classList.add('match');
+    pairOfCards[0].classList.add('match');
+    pairOfCards[1].classList.add('match');
+}
+
+function closeCards() {    
+    pairOfCards[0].classList.remove('open', 'show', 'avoid-clicks');
+    pairOfCards[1].classList.remove('open', 'show', 'avoid-clicks');
+}
+
+function incrementMovesCounter() {
+    movesCounter++;                
+    movesPanel.textContent = movesCounter;
 }
