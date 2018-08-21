@@ -1,8 +1,6 @@
 
 let matchedPairs, movesCounter, shuffledCards, pairOfCards, clockActive, time, minutes, seconds, clockID;
 
-
-
 const deck = document.querySelector('.deck');
 const cards = document.querySelectorAll('.card');
 const movesPanel = document.querySelector('.moves');
@@ -10,18 +8,15 @@ const stars = document.querySelectorAll('.stars i');
 const restartIcon = document.querySelector('.restart');
 const clock = document.querySelector('.clock');
 
-
 resetGame();
-
 
 deck.addEventListener('click', function (event) {
     
+    //Start timer
     if(clockActive === false){
         clockActive = true;
-        //start timer
         startClock();
-    }
-    
+    }    
 
     //Get clicked item
     const target = event.target;
@@ -53,17 +48,16 @@ deck.addEventListener('click', function (event) {
             }
             
         } else {
-            setTimeout(function (){                
+            //Display mismatch cards for .5 secs before closing
+            //setTimeout(function (){                
                 closeCards();
-                
-                //Empty pairOfCards Array
                 pairOfCards = [];
-            }, 500);
+            //}, 500);
         }
 
         incrementMovesCounter(); 
 
-        //Rate Star
+        //Star rating
         switch(movesCounter){
             case 13:
             case 16:
@@ -75,16 +69,10 @@ deck.addEventListener('click', function (event) {
     } 
 });
 
-
-
-
-//Restart button
+//Restart game on click
 restartIcon.addEventListener('click', function() {
     resetGame();
 });
-
-
-
 
 /*
  * set up the event listener for a card. If a card is clicked:
@@ -120,28 +108,27 @@ function resetGame(){
  *   - loop through each card and create its HTML
  *   - 
  */
+    //Reset timer
     time = 0;
     clearTimeout(clockID);
     clockActive = false;
     clock.innerHTML = '0:00';
+
     matchedPairs = 0;
     movesCounter = 0;
     pairOfCards = [];
     movesPanel.textContent = 0;
 
+    //Reset game board
     shuffledCards = shuffle([...cards]);
-
     for (card of shuffledCards) {
         card.classList.remove('open', 'show', 'avoid-clicks', 'match');
-        //Add each card's HTML to the page
         deck.appendChild(card);
     }
 
     //reset stars 
-    
+    showAllStars();
 }
-
-
 
 function cardIsClicked(tgrt){
     return tgrt.classList.contains('card');
@@ -151,7 +138,6 @@ function openCard(trgt){
 }
 
 function firstClick(tgrt){
-    //
     return !tgrt.classList.contains('avoid-clicks');
 }
 
@@ -169,11 +155,9 @@ function keepCardsOpen() {
     pairOfCards[1].classList.add('match');
 }
 
-function closeCards() {    
-  // setTimeout(function() {
-        pairOfCards[0].classList.remove('open', 'show', 'avoid-clicks');
-        pairOfCards[1].classList.remove('open', 'show', 'avoid-clicks');
-   //}, 0);    
+function closeCards() { 
+    pairOfCards[0].classList.remove('open', 'show', 'avoid-clicks');
+    pairOfCards[1].classList.remove('open', 'show', 'avoid-clicks');     
 }
 
 function incrementMovesCounter() {
@@ -190,8 +174,16 @@ function hideStar() {
     }
 }
 
+function showAllStars() {
+    for(star of stars){
+        if(star.style.display == 'none')
+            star.style.display = 'inline-block';
+    }
+}
+
 function startClock() {    
-    clockID =  setInterval(function(){
+    clockID =  setInterval(function(){        
+        time++;
         minutes = Math.floor(time / 60);
         seconds = time % 60;
         if(seconds > 9){
@@ -199,6 +191,5 @@ function startClock() {
         }else{
             clock.innerHTML = `${minutes}:0${seconds}`;
         }
-        time++;
-    }, 1000)
+    }, 1000);
 }
