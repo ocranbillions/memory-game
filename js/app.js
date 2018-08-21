@@ -1,64 +1,85 @@
 
-let matchedPairs, movesCounter, shuffledCards, pairOfCards;
+let matchedPairs, movesCounter, shuffledCards, pairOfCards, clockActive, time, minutes, seconds, clockID;
+
 
 
 const deck = document.querySelector('.deck');
 const cards = document.querySelectorAll('.card');
 const movesPanel = document.querySelector('.moves');
-const restartButton = document.querySelector('.restart');
+const stars = document.querySelectorAll('.stars i');
+const restartIcon = document.querySelector('.restart');
+const clock = document.querySelector('.clock');
 
 
 resetGame();
 
 
 deck.addEventListener('click', function (event) {
+    
+    if(clockActive === false){
+        clockActive = true;
+        //start timer
+        startClock();
+    }
+    
+
     //Get clicked item
     const target = event.target;
 
-    //Check if user clicked a card
-    if (cardIsClicked(target)) {
-        //Open the card
-        openCard(target);
+    //Avoid multiple clicks on same card & Add two cards at a time
+    if(cardIsClicked(target) && pairOfCards.length < 2 && firstClick(target)) {     
+        openCard(target);       
+        addCard(target);
+    }
 
-        //Avoid multiple clicks on same card & Add two cards at a time
-        if(firstClick(target) && pairOfCards.length < 2) {            
-            addCard(target);
-        }
+    if(pairOfCards.length === 2){
 
-        if(pairOfCards.length === 2){
+        if(match(pairOfCards)) {
 
-            if(match(pairOfCards)) {
-                keepCardsOpen();
-                
-                //Empty pairOfCards Array
-                pairOfCards = [];
+            keepCardsOpen();
+            
+            //Empty pairOfCards Array
+            pairOfCards = [];
 
-                //Count number of matched pairs
-                matchedPairs++;
+            //Count number of matched pairs
+            matchedPairs++;
 
-                if(matchedPairs === 8) {
+            if(matchedPairs === 8) {
+                clearTimeout(clockID);
+                setTimeout(function() {
                     alert('Finished');
                     alert(`${movesCounter} moves`);
-                }
-                
-            } else {
-
+                }, 0);                
+            }
+            
+        } else {
+            setTimeout(function (){                
                 closeCards();
-
+                
                 //Empty pairOfCards Array
                 pairOfCards = [];
-            }
-
-            incrementMovesCounter(); 
+            }, 500);
         }
-    }    
+
+        incrementMovesCounter(); 
+
+        //Rate Star
+        switch(movesCounter){
+            case 13:
+            case 16:
+            case 19:
+            case 20:
+                hideStar();
+                break;
+        }
+    } 
 });
 
 
 
 
 //Restart button
-restartButton.addEventListener('click', function() {
+restartIcon.addEventListener('click', function() {
     resetGame();
 });
 
@@ -99,19 +120,25 @@ function resetGame(){
  *   - loop through each card and create its HTML
  *   - 
  */
-
+    time = 0;
+    clearTimeout(clockID);
+    clockActive = false;
+    clock.innerHTML = '0:00';
     matchedPairs = 0;
     movesCounter = 0;
     pairOfCards = [];
     movesPanel.textContent = 0;
 
-    shuffledCards = shuffle(Array.from(cards));
+    shuffledCards = shuffle([...cards]);
 
     for (card of shuffledCards) {
         card.classList.remove('open', 'show', 'avoid-clicks', 'match');
         //Add each card's HTML to the page
         deck.appendChild(card);
     }
+
+    //reset stars 
+    
 }
 
 
@@ -143,11 +170,35 @@ function keepCardsOpen() {
 }
 
 function closeCards() {    
-    pairOfCards[0].classList.remove('open', 'show', 'avoid-clicks');
-    pairOfCards[1].classList.remove('open', 'show', 'avoid-clicks');
+  // setTimeout(function() {
+        pairOfCards[0].classList.remove('open', 'show', 'avoid-clicks');
+        pairOfCards[1].classList.remove('open', 'show', 'avoid-clicks');
+   //}, 0);    
 }
 
 function incrementMovesCounter() {
     movesCounter++;                
     movesPanel.textContent = movesCounter;
+}
+
+function hideStar() {
+    for(star of stars){
+        if(star.style.display != 'none') {
+            star.style.display = 'none';
+            break;
+        }
+    }
+}
+
+function startClock() {    
+    clockID =  setInterval(function(){
+        minutes = Math.floor(time / 60);
+        seconds = time % 60;
+        if(seconds > 9){
+            clock.innerHTML = `${minutes}:${seconds}`;
+        }else{
+            clock.innerHTML = `${minutes}:0${seconds}`;
+        }
+        time++;
+    }, 1000)
 }
