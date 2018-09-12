@@ -108,18 +108,67 @@ h1 {
     cursor: pointer;
 }
 
-.modal {
+
+
+/*
+ * --------- my stylings -------
+ */
+
+.modal_container {
     position: absolute;
-    width: 100%;
-    height: 100%;
-    /*background: rgba(46, 61, 73, 0.5);*/
-    background: rgba(0, 0, 0, 0);
+    width: 100%; 
+    height: 100vh; 
 }
 
-.modal_body {
+.modal {
+    text-align: center;
     position: relative;
+    margin-left: -50%;
     width: 400px;
-    height: 400px;
-    background: #aa7ecd;
-    margin: 20px auto;
+    background: #D6FEFF;
+    margin: 200px auto;
+    z-index: 1;
+    padding-bottom: 5px;
+}
+
+.modal>div {
+    padding: 50px;
+}
+
+.hide {
+    display: none;
+}
+
+.btn {
+    padding: 10px;
+}
+
+/*
+ * Responsive for mobile devies
+ */
+@media only screen and (max-width: 660px) {
+    .deck {
+        width: 100%;
+    }
+    .card {
+        width: 21% !important;
+        padding-right: 2%;
+        padding-left: 2%;
+    }
+}
+
+@media only screen and (max-width: 550px){
+    .card {
+        height: 100px !important;
+    }
+}
+
+@media only screen and (max-width: 480px) {
+    .card {
+        height: 80px !important;
+    }
+
+    .modal {
+        width: 80%;
+    }
 }

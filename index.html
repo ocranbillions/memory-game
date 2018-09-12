@@ -4,27 +4,33 @@
     <meta charset="utf-8">
     <title>Matching Game</title>
     <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet prefetch" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css">
     <link rel="stylesheet prefetch" href="https://fonts.googleapis.com/css?family=Coda">
     <link rel="stylesheet" href="css/app.css">
+    <!-- Animation -->
+    <link rel="stylesheet"  href="https://cdn.jsdelivr.net/npm/animate.css@3.5.2/animate.min.css">
 </head>
 <body>
 
-    <div class="modal hide">
-        <div class="modal_body">
-            <h1>Congratulations!!!</h1>
-            <h3 class="stars_won">You won with stars</h3>
-            <h3 class="time_spentt">Time Spent: </h3>
-
-            <h2>Play Again.</h2>
-            <button>Yes</button>
-            <button>No</button>
+    <div class="modal_container">
+        <div class="modal">
+            <div>
+                <h3>Congratulations! You Won!</h3>
+                <div class="win_details"></div>
+                <div>Time Spent: <span class="time_spent"></span></div>
+            </div>
+            
+            <hr/>
+            
+            <span>Play Again</span>
+            <button class="btn">Restart Game</button>
         </div>
     </div>
 
     <div class="container">
         <header>
-            <h1>Matching Game</h1>
+            <h1 class="animated rubberBand">Matching Game</h1>
         </header>
 
         <section class="score-panel">
