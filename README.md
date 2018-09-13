@@ -1,20 +1,20 @@
 # Memory Game Project
 
-## Table of Contents
+Hi everyone, this is a memory game I built as part of my Udacity Frontend Nanodegree Program. 
 
-* [Instructions](#instructions)
-* [Contributing](#contributing)
 
-## Instructions
+## How To Play
+The goal of this game is to match all pairs that are of identical faces.
 
-The starter project has some HTML and CSS styling to display a static version of the Memory Game project. You'll need to convert this project from a static project to an interactive one. This will require modifying the HTML and CSS files, but primarily the JavaScript file.
+### Instructions
+>- You have two clicks per move
+>- Click on a card to unveil to symbol
+>- Click a second card to unveil its symbol
+>- If the two are the same symbol, both cards stay open.
+>- There are a total of 8 pairs on the grid
+>- Repeat steps 2 and 3 until you've matched all the pairs
+>- The game is completed when pairs are matched.
 
-To get started, open `js/app.js` and start building out the app's functionality
+At the end of the game a window appears with details on the number of moves made, time spent your star rating.
 
-For specific, detailed instructions, look at the project instructions in the [Udacity Classroom](https://classroom.udacity.com/me).
-
-## Contributing
-
-This repository is the starter code for _all_ Udacity students. Therefore, we most likely will not accept pull requests.
-
-For details, check out [CONTRIBUTING.md](CONTRIBUTING.md).
+Click [here](https://ocranbillions.github.io/memory-game/) to play. Good luck!
