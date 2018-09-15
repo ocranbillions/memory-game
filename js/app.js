@@ -22,69 +22,69 @@ deck.addEventListener('click', function (event) {
         clockActive = true;
         startClock();
     }    
-
+    
     //Get clicked item
     const target = event.target;
+        //Avoid multiple clicks on same card & Add two cards at a time
+    if(cardIsClicked(target) && (cardList.length < 2) && firstClick(target)) {    
 
-    //Avoid multiple clicks on same card & Add two cards at a time
-    if(cardIsClicked(target) && cardList.length < 2 && firstClick(target)) {     
         showCard(target);       
         addCard(target);
-    }
 
-    if(cardList.length === 2){
+        if(cardList.length === 2){
 
-        if(match(cardList)) {
+            if(match(cardList)) {
 
-            keepCardsOpen();
+                keepCardsOpen();
 
-            //Count number of matched pairs
-            matchedPairs++;
+                //Count number of matched pairs
+                matchedPairs++;
 
-            if(matchedPairs === 8) {
-                //Stop clock
-                clearTimeout(clockID);
+                if(matchedPairs === 8) {
+                    //Stop clock
+                    clearTimeout(clockID);
 
-                //Delay .5 sec then show congratulatory message
-                setTimeout(function() {
-                    //Show Modal
-                    modal.classList.remove('hide');
+                    //Delay .5 sec then show congratulatory message
+                    setTimeout(function() {
+                        //Show Modal
+                        modal.classList.remove('hide');
 
-                    //Get the html section to write winning details
-                    const winDetails = document.querySelector('.win_details');
+                        //Get the html section to write winning details
+                        const winDetails = document.querySelector('.win_details');
 
-                    //Get the html section to write time spent
-                    const timeSpent = document.querySelector('.time_spent');
+                        //Get the html section to write time spent
+                        const timeSpent = document.querySelector('.time_spent');
 
-                    //Write winning details on modal
-                    winDetails.textContent = `With ${movesCounter++} moves and ${countStars()} star(s)`;
-                    timeSpent.textContent = document.querySelector('.clock').textContent;
-                }, 500);                
+                        //Write winning details on modal
+                        winDetails.textContent = `With ${movesCounter++} moves and ${countStars()} ${countStars() == 1 ? 'star' : 'stars'}.`;
+                        timeSpent.textContent = document.querySelector('.clock').textContent;
+                    }, 500);                
+                }
+                
+            } else {            
+                //  
+                cardList[0].classList.add('animated', 'shake');
+                cardList[1].classList.add('animated', 'shake');
+                
+                //Show mismatch pair for 0.5 sec before closing
+                setTimeout(function (){
+                    closeCards();
+                }, 400);   
             }
-            
-        } else {            
-            //  
-            cardList[0].classList.add('animated', 'shake');
-            cardList[1].classList.add('animated', 'shake');
-            
-            //Show mismatch pair for 0.5 sec before closing
-            setTimeout(function (){
-                closeCards();
-            }, 400);             
-        }
 
-        incrementMovesCounter(); 
+            incrementMovesCounter(); 
 
-        //Star rating
-        switch(movesCounter){
-            case 13:
-            case 16:
-            case 19:
-            case 20:
-                hideStar();
-                break;
-        }
-    } 
+            //Star rating
+            switch(movesCounter){
+                case 13:
+                case 16:
+                case 19:
+                case 20:
+                    hideStar();
+                    break;
+            }
+        } 
+    }
 });
 
 //Restart game on click
@@ -120,7 +120,7 @@ function resetGame(){
 
     //Reset game board
     shuffledCards = shuffle([...cards]);
-    for (card of shuffledCards) {
+    for (let card of shuffledCards) {
         card.classList.remove('open', 'show', 'avoid-clicks', 'match', 'animate', 'rubberBand');
         deck.appendChild(card);
     }
@@ -159,7 +159,7 @@ function keepCardsOpen() {
 function closeCards() {
     cardList[0].classList.remove('animated', 'shake', 'open', 'show', 'avoid-clicks');
     cardList[1].classList.remove('animated', 'shake', 'open', 'show', 'avoid-clicks');  
-    cardList = [];   
+    cardList = [];  
 }
 
 function incrementMovesCounter() {
@@ -168,7 +168,7 @@ function incrementMovesCounter() {
 }
 
 function hideStar() {
-    for(star of stars){
+    for(let star of stars){
         if(star.style.display != 'none') {
             star.style.display = 'none';
             break;
